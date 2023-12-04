@@ -1,0 +1,319 @@
+https://github.com/christopherdodd/Skillshare
+
+Slider==>https://codepen.io/syrizaldev/pen/xxxmdzw  
+
+
+<img src="{{ block.settings["icon-img"] | img_url: 'master' }}" style="width: {{ block.settings["icon_width"] }}px;" />
+++++++++++++++++++
+Meta field
+==================
+{{ card_product.metafields.custom.calcium.value  }}
+
+==> product-card
+==> main product
+
+teamdevmw+rajan@gmail.com
+
+====>>My Work<<<====
+=====================
+1) Jc carering 
+2) crua landing
+3) Melon Rx
+4) phone loop
+5) Animel 
+6) Maryluu
+7) Oye sarana
+8) Ehmesa
+
+Website remove text
+======================
+1> photoroom
+
+Phone loop | deleted
+====================
+
+@media screen and (max-width: 768px) {
+  .grid__item {
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-right: 35px;
+  }
+  .slick-dots {
+    padding: 0 60px;
+  }
+}
+
+
+
+>>>>>>>>>>>>Jc Catering:<<<<<<<<<<<<<<<<<
+========================================
+
+working of images
+==================
+@media screen and (max-width: 749px){
+           .slideshow__media.banner__media.media {
+          height:20rem;
+           }
+}
+
+header>>>>
+.header--middle-left {
+  grid-template-columns: 1fr auto 1fr;
+}
+
+
+}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}  >>>>>.... Section Setting----<<<<<<<<
+=====================================
+{% schema %}
+{
+    "name": "cut-off-overlay",
+    "class": "cut-off-overlay-section",
+    "settings": [
+            {
+                "type":"text",
+                "id":"offer-text",
+                "default":"GET 20% OFF",
+                "label":"Offer Heading"
+            }
+        ],
+    "presets":[
+        {
+            "name":"cut-off-overlay"
+        }
+    ]
+}
+{% endschema %}
+
+
+
++++++++++++++++++++++.>>>>>>>>>>>>>>>Shopify Section Setting and Block Setting<<<<<<<<<<<<<<<<<<<++++++++++++++
+{% schema %}
+  {
+    "name": "Heading",
+        "settings": [ 
+                        {
+                          "type": "text",
+                          "id": "section-heading",
+                          "label": "Header",
+                      "default": "Current product listing"
+                        },
+                        {
+                          "type": "text",
+                          "id": "section-subheading",
+                          "label": "Subheader",
+                      "default": "current products"
+                        }
+                    ],
+    "name": "Standard Collection",
+  
+        "blocks": [
+                      {
+                        "type": "text",
+                        "name": "Product",
+                        "settings": [
+                          {
+                            "type": "select",
+                            "id": "availability",
+                            "label": "Product is available or not",
+                            "default": "product-available",
+                            "options": [
+                              {
+                                "value": "product-available",
+                                "label": "available"
+                              },
+                              {
+                                "value": "product-unavailable",
+                                "label": "unavailable"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "image_picker",
+                            "id": "image",
+                            "label": "Product Image"
+                          },
+                          {
+                            "type": "text",
+                            "id": "product-title",
+                            "label": "Product title",
+                            "default": "Enter product title"
+                          }
+                          
+                          
+                        ]
+                      }
+                ]
+      
+  }
+  
+  {% endschema %}
+
+............>>>> Rendering Snipet using section setting <<<<< ..............
+
+{% comment %} {% render 'cut-off-overlay',section:section %}   {% endcomment %}
+  OR
+{% render 'cut-off-overlay', offer: section.settings.offer-text %}  
+
+{% schema %}
+  {
+      "name": "cut-off-overlay",
+      "class": "cut-off-overlay-section",
+      "settings": [
+              {
+                  "type":"text",
+                  "id":"offer-text",
+                  "default":"GET 20% OFF",
+                  "label":"Offer Heading"
+              }
+          ],
+      "presets":[
+          {
+              "name":"cut-off-overlay"
+          }
+      ]
+  }
+  {% endschema %}
+
+
+=========================BLOCK Setting======================
+<style>
+
+.text_icon_row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 50px;
+    padding: 20px;
+}
+
+.text-icon_col {
+    display: flex;
+    align-items: center;
+    width: 20%;
+}
+
+.content {
+    padding-right: 15px;
+    text-align: right;
+}
+
+.content p {
+    margin: 0px;
+}
+</style>
+
+<div class="text_icon_row">
+    {% for block in section.blocks %}
+        {% if block.type == "icon-text" %}
+            <div class="text-icon_col">
+                <div class="content">
+                    <h1 >{{ block.settings["icon-text"] }}</h1>
+                    <p>{{ block.settings["icon-dec"] }}</p>
+                </div>
+                <img src="{{ block.settings["icon-img"] | img_url: 'master' }}" style="width: {{ block.settings["icon_width"] }}px;" />
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+{% schema %}
+{
+    "name": "text-with-icon",
+    "blocks": [
+        {
+            "name": "icon-text",
+            "type": "icon-text",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "icon-text",
+                    "label": "Heading",
+                    "default": "Enter your heading"
+                },
+                {
+                    "type": "richtext",
+                    "id": "icon-dec",
+                    "label": "Description"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "icon-img",
+                    "label": "Image picker"
+                },
+                {
+                "type": "range",
+                "id": "icon_width",
+                "min": 24,
+                "max": 120,
+                "step": 4,
+                "unit": "px",
+                "label": "Icon width",
+                "default": 32
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "text-with-icon",
+            "blocks": [
+                {
+                    "type": "icon-text"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}
+
+Contact form update
+++++++++++++++++++++++++++++++
+
+<div class="contact__fields">
+  <!-- Existing fields... -->
+
+  <!-- New field: Number of Guests -->
+  <div class="field">
+    <input
+      class="field__input"
+      type="text"
+      id="ContactForm-guests"
+      name="contact[{{ 'templates.contact.form.guests' | t }}]"
+      placeholder="{{ 'templates.contact.form.guests' | t }}"
+    >
+    <label class="field__label" for="ContactForm-guests">{{ 'templates.contact.form.guests' | t }}</label>
+  </div>
+
+  <!-- New field: Location -->
+  <div class="field">
+    <input
+      class="field__input"
+      type="text"
+      id="ContactForm-location"
+      name="contact[{{ 'templates.contact.form.location' | t }}]"
+      placeholder="{{ 'templates.contact.form.location' | t }}"
+    >
+    <label class="field__label" for="ContactForm-location">{{ 'templates.contact.form.location' | t }}</label>
+  </div>
+
+  <!-- New field: Date and Time -->
+  <div class="field">
+    <input
+      class="field__input"
+      type="date"
+      id="ContactForm-date"
+      name="contact[{{ 'templates.contact.form.date' | t }}]"
+    >
+    <label class="field__label" for="ContactForm-date">{{ 'templates.contact.form.date' | t }}</label>
+  </div>
+
+  <div class="field">
+    <input
+      class="field__input"
+      type="time"
+      id="ContactForm-time"
+      name="contact[{{ 'templates.contact.form.time' | t }}]"
+    >
+    <label class="field__label" for="ContactForm-time">{{ 'templates.contact.form.time' | t }}</label>
+  </div>
+</div>
