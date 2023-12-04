@@ -1,1 +1,52 @@
 
+Contact form update
+++++++++++++++++++++++++++++++
+
+<div class="contact__fields">
+  <!-- Existing fields... -->
+
+  <!-- New field: Number of Guests -->
+  <div class="field">
+    <input
+      class="field__input"
+      type="text"
+      id="ContactForm-guests"
+      name="contact[{{ 'templates.contact.form.guests' | t }}]"
+      placeholder="{{ 'templates.contact.form.guests' | t }}"
+    >
+    <label class="field__label" for="ContactForm-guests">{{ 'templates.contact.form.guests' | t }}</label>
+  </div>
+
+  <!-- New field: Location -->
+  <div class="field">
+    <input
+      class="field__input"
+      type="text"
+      id="ContactForm-location"
+      name="contact[{{ 'templates.contact.form.location' | t }}]"
+      placeholder="{{ 'templates.contact.form.location' | t }}"
+    >
+    <label class="field__label" for="ContactForm-location">{{ 'templates.contact.form.location' | t }}</label>
+  </div>
+
+  <!-- New field: Date and Time -->
+  <div class="field">
+    <input
+      class="field__input"
+      type="date"
+      id="ContactForm-date"
+      name="contact[{{ 'templates.contact.form.date' | t }}]"
+    >
+    <label class="field__label" for="ContactForm-date">{{ 'templates.contact.form.date' | t }}</label>
+  </div>
+
+  <div class="field">
+    <input
+      class="field__input"
+      type="time"
+      id="ContactForm-time"
+      name="contact[{{ 'templates.contact.form.time' | t }}]"
+    >
+    <label class="field__label" for="ContactForm-time">{{ 'templates.contact.form.time' | t }}</label>
+  </div>
+</div>
