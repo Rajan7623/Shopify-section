@@ -1,0 +1,91 @@
+
+=========================BLOCK Setting======================
+<style>
+
+.text_icon_row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 50px;
+    padding: 20px;
+}
+
+.text-icon_col {
+    display: flex;
+    align-items: center;
+    width: 20%;
+}
+
+.content {
+    padding-right: 15px;
+    text-align: right;
+}
+
+.content p {
+    margin: 0px;
+}
+</style>
+
+<div class="text_icon_row">
+    {% for block in section.blocks %}
+        {% if block.type == "icon-text" %}
+            <div class="text-icon_col">
+                <div class="content">
+                    <h1 >{{ block.settings["icon-text"] }}</h1>
+                    <p>{{ block.settings["icon-dec"] }}</p>
+                </div>
+                <img src="{{ block.settings["icon-img"] | img_url: 'master' }}" style="width: {{ block.settings["icon_width"] }}px;" />
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+{% schema %}
+{
+    "name": "text-with-icon",
+    "blocks": [
+        {
+            "name": "icon-text",
+            "type": "icon-text",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "icon-text",
+                    "label": "Heading",
+                    "default": "Enter your heading"
+                },
+                {
+                    "type": "richtext",
+                    "id": "icon-dec",
+                    "label": "Description"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "icon-img",
+                    "label": "Image picker"
+                },
+                {
+                "type": "range",
+                "id": "icon_width",
+                "min": 24,
+                "max": 120,
+                "step": 4,
+                "unit": "px",
+                "label": "Icon width",
+                "default": 32
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "text-with-icon",
+            "blocks": [
+                {
+                    "type": "icon-text"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}
