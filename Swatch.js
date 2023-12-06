@@ -10,3 +10,11 @@ cusSwatch.forEach((element) => {
 
   })
 })
+  or Swatch liquid
+===========================
+
+     {%- if href == blank -%}
+      <label class="color-swatch custom_swatch {% if settings.round_color_swatches %}rounded-full{% endif %} {% if white_label == value_downcase %}border{% endif %}" for="{{ id | escape }}" {% if show_tooltip %}data-tooltip="{{ value | escape }}"{% endif %} data-option-value style="{{ swatch_style }} " data-img-url="{{ prd.variants[forLoopNum].image |  img_url: 'master' }}">
+        <span class="sr-only" >{{ value }}</span>
+      </label>
+    {%- else -%}
