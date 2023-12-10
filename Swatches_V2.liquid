@@ -1,0 +1,364 @@
+The instructions below can be used to install variant color and image swatches into your Shopify Dawn theme. Further instructions on how to install can be found in the YouTube instructions (https://www.youtube.com/watch?v=x3zAaxzyugs).
+
+If this tutorial is helpful to you, then please **subscribe** to our channel ****and **like** our videos. It helps us out and allows us to continue to make content and tutorials like this.
+
+Note: This code may work on other free Shopify themes but we haven’t tested it yet.  https://wescalebrands.notion.site/The-Prompted-Product-Variant-Color-and-Image-Swatches-d33dc4ca82f54c8d9552287c3d459234
+
+## Instructions
+
+### 1. Create Snippet For Variant Color and Image Swatches
+============================================================
+Create liquid snippet variant-swatch-custom.liquid
+{% comment %}
+
+  Description:
+  Renders product variant color swatch options. Also includes js to detect and change swatches and css styling.
+
+  Accepts:
+  - product: {Object} product object.
+  - option: {Object} current product_option object.
+  - block: {Object} block object.
+  - initial_selected_color: passes the initially selected color on page load
+
+  Usage:
+  {% render 'variant-swatch-custom',
+    product: product,
+    option: option,
+    block: block,
+    initial_selected_color: initial_selected_color
+  %}
+{% endcomment %}
+
+{% assign target_entry = nil %}
+{% for entry in shop.metaobjects.color_variants_data.values %}
+  {% if entry.list_name == "colorslist" %}
+    {% assign target_entry = entry %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+{% assign color_variants_data = target_entry.color_variants_json %}
+
+{% for value in option.values %}
+  {% assign variant_available = false %}
+  {% for variant in product.variants %}
+    {% if variant.title contains value and variant.available %}
+      {% assign variant_available = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+  
+  {% assign current_image_handle = nil %}
+  {% assign current_color_swatch = nil %}
+  
+  {% for variant in color_variants_data.value %}
+    {% if variant.color_variant_name == value %}
+      {% assign current_image_handle = variant.image_swatch %}
+      {% assign current_color_swatch = variant.color_swatch %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+  {% if value == initial_selected_color %}
+    {% assign is_checked = 'checked="checked"' %}
+  {% else %}
+    {% assign is_checked = '' %}
+  {% endif %}
+
+{% if current_image_handle %}
+    {% assign image_url = current_image_handle | append: '.jpg' | file_url %}
+{% endif %}
+
+<div class="product-form__swatch {% unless variant_available %}product-form__swatch--unavailable{% endunless %}">
+    {% if current_image_handle or current_color_swatch %}
+        <input type="radio" {{ is_checked }} id="Option-{{ section.id }}-{{ forloop.index0 }}" name="options[{{ option.name | escape }}]" value="{{ value | escape }}" form="{{ product_form_id }}">
+        <label for="Option-{{ section.id }}-{{ forloop.index0 }}" style="background-color: {{ current_color_swatch }}; background-image: url('{{ image_url }}');"></label>
+    {% else %}
+        {% assign words = value | split: " " %}
+        {% assign initials = "" %}
+        {% for word in words %}
+            {% assign first_letter = word | slice: 0, 1 %}
+            {% assign initials = initials | append: first_letter %}
+        {% endfor %}
+        <input type="radio" {{ is_checked }} id="Option-{{ section.id }}-{{ forloop.index0 }}" name="options[{{ option.name | escape }}]" value="{{ value | escape }}" form="{{ product_form_id }}">
+        <label for="Option-{{ section.id }}-{{ forloop.index0 }}">{{ initials }}</label>
+    {% endif %}
+</div>
+
+{% endfor %}
+
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Get a reference to the radio inputs and the display element
+    var colorInputs = document.querySelectorAll('.product-form__swatch input[type="radio"]');
+    var colorDisplay = document.getElementById('selectedColor');
+
+    // Function to handle color selection change
+    function updateColorDisplay(e) {
+        if (e.target.checked) {
+            colorDisplay.textContent = e.target.value;
+        }
+    }
+
+    // Add event listeners to each radio input
+    colorInputs.forEach(function(input) {
+        input.addEventListener('change', updateColorDisplay);
+    });
+});
+
+  
+</script>
+
+
+<style>
+
+.collection-form__colors .product-form__swatch label {
+    width: 15px;
+    height: 15px;
+    font-size: 8px; 
+}  
+
+.collection-form__colors .product-form__swatch {
+    margin-right: 0px;
+}    
+
+.collection-form__colors {
+    margin-top: 5px;
+}
+  
+  
+.product-form__swatch {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.product-form__swatch input {
+    display: none;
+}
+  
+.product-form__color-input .product-form__swatch label {
+    width: 45px;
+    height: 45px;
+}
+  
+.product-form__swatch label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+    border-radius: 50%; /* Make the label circular */
+    font-size: 12px; /* Adjust this value as needed */
+    font-weight: bold; /* Optional: make the text bold */
+    border: 2px solid #ddd; 
+    transition: border-color 0.3s ease; /* smoothens the border color transition */
+}
+
+.product-form__swatch input, .product-form__swatch label {
+    margin: 0;
+    padding: 0;
+}
+
+.product-form__swatch label:hover {
+    border-color: #333; /* Darken the border color on hover */
+    border-width: 3px !important;  /* Thicken the border on hover */
+}
+  
+.product-form__swatch input:checked + label {
+    border-color: #000; /* Darker color for the selected swatch's outer border */
+    border-width: 3px; /* Thicker border */
+    box-shadow: inset 0 0 0 3px #fff; /* Apply the inner border only to the selected label */
+}
+
+
+.product-form__swatch--unavailable label {
+  opacity: 0.5;
+  position: relative;
+}
+
+.product-form__swatch--unavailable label::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(to bottom right, transparent 45%, rgba(255, 0, 0, 0.6) 50%, transparent 55%); /* red diagonal line */
+    pointer-events: none; /* make sure the line doesn't interfere with any click events */
+}
+
+.product-form__swatch--unavailable label {
+    position: relative;
+    opacity: 0.5;
+}
+
+.product-form__swatch--unavailable label::after {
+    content: '';
+    position: absolute;
+    top: 0px;    /* Slight offset to keep the line inside the border */
+    right: 0px;  /* Adjust these values as needed */
+    bottom: 0px;
+    left: 0px;
+    background: linear-gradient(to bottom right, transparent 45%, rgba(0, 0, 0, 0.5) 50%, transparent 55%);
+    border-radius: 50%; /* Ensure the pseudo-element is also circular */
+    pointer-events: none;
+}
+
+.card__information {
+    padding-top: 5px;
+}
+  
+</style>
+
+2. Edit Product Page To Render Variant Swatch Snippet
+===============================================================
+Edit product-variant-picker.liquid
+If the variant selector type is buttons, search for the loop. 
+
+Code 
+{%- for option in product.options_with_values -%}
+
+Note it shows up twice, but we will only edit for the picker_type “button” (at time of writing, this is the first instance of the loop), ie. under this code
+===============================================================================================================================================================
+{%- if block.settings.picker_type == 'button' -%}
+    <variant-radios
+      id="variant-radios-{{ section.id }}"
+      class="no-js-hidden"
+      data-section="{{ section.id }}"
+      data-url="{{ product.url }}"
+      {% if update_url == false %}
+        data-update-url="false"
+      {% endif %}
+      {{ block.shopify_attributes }}
+    >
+      {%- for option in product.options_with_values -%}
+
+and replace the following fieldset definition (can comment out original version)
+=====================================================================================
+<fieldset class="js product-form__input">
+  <legend class="form__label">{{ option.name }}</legend>
+  {% render 'product-variant-options', product: product, option: option, block: block %}
+</fieldset>
+
+with this one
+====================================================
+<fieldset class="js product-form__input {% if option.name == 'Color' %}product-form__color-input{% endif %}">
+    {% if option.name == "Color" %}  
+        {% assign color_index = -1 %}
+        {% for option in product.options %}
+          {% if option == "Color" %}
+            {% assign color_index = forloop.index0 %}
+          {% endif %}
+        {% endfor %}
+        {% assign initial_selected_color = product.selected_or_first_available_variant.options[color_index] %}
+        <legend class="form__label">
+            {{ option.name }}: 
+            <span id="selectedColor">{{ initial_selected_color }}</span>
+        </legend>
+        {% render 'variant-swatch-custom', product: product, option: option, section: section, initial_selected_color: initial_selected_color %}
+    {% else %}
+        <legend class="form__label">{{ option.name }}</legend>
+        {% render 'product-variant-options', product: product, option: option, block: block %}
+    {% endif %}
+</fieldset>
+
+Final code edits
+==========================================
+          <fieldset class="js product-form__input {% if option.name == 'Color' %}product-form__color-input{% endif %}">
+              {% if option.name == "Color" %}  
+                  {% assign color_index = -1 %}
+                  {% for option in product.options %}
+                    {% if option == "Color" %}
+                      {% assign color_index = forloop.index0 %}
+                    {% endif %}
+                  {% endfor %}
+                  {% assign initial_selected_color = product.selected_or_first_available_variant.options[color_index] %}
+                  <legend class="form__label">
+                      {{ option.name }}: 
+                      <span id="selectedColor">{{ initial_selected_color }}</span>
+                  </legend>
+                  {% render 'variant-swatch-custom', product: product, option: option, section: section, initial_selected_color: initial_selected_color %}
+              {% else %}
+                  <legend class="form__label">{{ option.name }}</legend>
+                  {% render 'product-variant-options', product: product, option: option, block: block %}
+              {% endif %}
+          </fieldset>
+        
+          {% comment %} ---original fieldset definition---
+          <fieldset class="js product-form__input">
+            <legend class="form__label">{{ option.name }}</legend>
+            {% render 'product-variant-options', product: product, option: option, block: block %}
+          </fieldset>
+          {% endcomment %}
+
+### 3. Create Metaobject and Metaobject Entry
+=========================================================
+- Create Metaobject “Color Variants Data” (type color_variants_data) with fields:
+    1. List name
+    2. Color Variants JSON
+        1. The JSON will have the following schema defined:
+
+{
+  "$id": "color_variants_list.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Color Variants List",
+  "description": "A list of color variants with swatches",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "color_variant_name": {
+        "type": "string",
+        "description": "The name of the color variant."
+      },
+      "color_swatch": {
+        "type": "string",
+        "description": "The HEX value or description of the color."
+      },
+      "image_swatch": {
+        "type": "string",
+        "description": "The filename or URL of the image representing the color."
+      }
+    },
+    "required": [
+      "color_variant_name",
+      "color_swatch",
+      "image_swatch"
+    ]
+  }
+}
+Your metaobject should be defined with these handles:
+
+
+And then add colors to the JSON with hex code and a .jpg file with the proper name.
+
+[
+  {
+    "color_variant_name": "Black",
+    "color_swatch": "#000000",
+    "image_swatch": ""
+  },
+  {
+    "color_variant_name": "Blue",
+    "color_swatch": "#0000FF",
+    "image_swatch": ""
+  },
+  {
+    "color_variant_name": "Green",
+    "color_swatch": "#008000",
+    "image_swatch": ""
+  },
+  {
+    "color_variant_name": "Red",
+    "color_swatch": "#FF0000",
+    "image_swatch": ""
+  },
+  {
+    "color_variant_name": "White",
+    "color_swatch": "#FFFFFF",
+    "image_swatch": ""
+  }
+]
