@@ -1,0 +1,223 @@
+<style>
+  ul.custom--tabs {
+    list-style-type: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    color: #000;
+    overflow: hidden;
+  }
+
+  .custom--tabs .tab__list {
+    flex-grow: 1;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease
+    , color 0.3s ease
+    , transform 0.3s ease
+    , border 0.3s ease;
+    margin: 8px;
+    border-radius: 10px;
+    border: 1.5px solid #000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  h5.custom-tab:hover {
+    background-color: #000;
+    color: #fff;
+    border-radius: 10px;
+  }
+
+  .custom__tab-content {
+    display: none;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    margin-top: 10px;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in-out forwards;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .custom__tab-content.active {
+    display: block;
+
+  }
+
+  .tab__list h5.custom-tab {
+    margin: 0;
+    padding: 15px;
+  }
+
+  .tab__list h5.custom-tab.active {
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 10px;
+    border-bottom: 4px solid #000000;
+  }
+
+  @media only screen and (max-width: 576px) {
+    ul.custom--tabs {
+      /* flex-direction: column; */
+    }
+    .custom--tabs .tab__list .custom-tab {
+      width: 100%;
+      border-bottom: none;
+    }
+    .tab__list h5.custom-tab {
+      margin: 0;
+      padding: 15px;
+    }
+
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+
+<section class="page-width" 
+         style="margin-block:{{ section.settings.margin_top }}px {{ section.settings.margin_bottom }}px ">
+
+  <ul class="custom--tabs ">
+    {% for block in section.blocks %}
+      {% if block.type == 'tab' %}
+        <li class="tab__list {% if forloop.first %}active{% endif %}">
+          <h5 class="custom-tab" data-content-id="content--{{ block.id }}--{{ section.id }}">
+            {{ block.settings.heading }}
+          </h5>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+
+  {% for block in section.blocks %}
+    {% if block.type == 'tab' %}
+      <div id="content--{{ block.id }}--{{ section.id }}" class="custom__tab-content {% if forloop.first %}active{% endif %}">
+        {{ block.settings.tab_content }}
+              <ul
+              id="product-grid"
+              data-id="{{ section.id }}"
+              class="grid product-grid grid--4-col-desktop grid--2-col-tablet-down"
+              >
+              {% for product in block.settings.tab_collection.products %}
+                    {% assign lazy_load = false %}
+                    {%- if forloop.index > 2 -%}
+                      {%- assign lazy_load = true -%}
+                    {%- endif -%}
+                    <li class="grid__item ">
+                      {% render 'card-product',
+                        card_product: product,
+                        media_aspect_ratio: section.settings.image_ratio,
+                        show_secondary_image: section.settings.show_secondary_image,
+                        show_vendor: section.settings.show_vendor,
+                        show_rating: section.settings.show_rating,
+                        lazy_load: lazy_load,
+                        show_quick_add: section.settings.enable_quick_add,
+                        section_id: section.id
+                      %}
+                    </li>
+              {% endfor %}
+           </ul>
+      </div>
+    {% endif %}
+  {% endfor %}
+  
+
+</section>
+
+{% schema %}
+  {
+    "name": "Tabs",
+    "settings": [
+      {
+        "type": "range",
+        "id": "margin_top",
+        "label": "Margin Top",
+        "default": 15,
+        "min": 0,
+        "max": 80,
+        "step": 1
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "label": "Margin Bottom",
+        "default": 15,
+        "min": 0,
+        "max": 80,
+        "step": 1
+      }
+    ],
+    "max_blocks": 5,
+    "blocks": [
+      {
+        "type": "tab",
+        "name": "Tabs",
+        "settings": [
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "info": "Include a heading that explains the tab."
+          },
+          {
+            "type": "richtext",
+            "id": "tab_content",
+            "label": "Content"
+          }, 
+          {
+            "type": "collection",
+            "id": "tab_collection",
+            "label": "Select your Collection"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Tabs",
+        "blocks": [
+          {
+            "type": "tab"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+
+{% javascript %}
+  tabs = document.querySelectorAll('.custom-tab');
+  tabContents = document.querySelectorAll('.custom__tab-content');
+
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+
+      contentId = this.dataset.contentId;
+      content = document.getElementById(contentId);
+
+      tabContents.forEach(function(content) {
+        content.classList.remove('active');
+      });
+
+      tabs.forEach(function(tab) {
+        tab.classList.remove('active');
+      });
+
+      this.classList.add('active');
+      content.classList.add('active');
+    });
+  });
+{% endjavascript %}
