@@ -1,0 +1,111 @@
+<style>
+  .slick-next:before, .slick-prev:before {
+    color: #000;
+}
+.custom-video-wrapper{
+  margin: 14px;
+}
+iframe {
+    border-radius: 16px;
+}
+</style>
+
+
+    <div class="grid page-width">
+      <h2>{{ section.settings.Heading }}</h2>
+     
+      <div class="custom-vedio-slider">
+        {% for block in section.blocks %}
+          <div class=" custom-inner-vedio " >
+              <div class="custom-video-wrapper">
+                  {% if block.settings.video__url == blank %}
+                    <iframe src="//www.youtube.com/embed/_9VUPq3SxOc?rel=0&showinfo=0&vq=720" title="YouTube iframe" width="350" height="480" frameborder="0" allowfullscreen></iframe>
+                  {% else %}
+                    {% if block.settings.video__url.type == "youtube" %}
+                      <iframe src="//www.youtube.com/embed/{{ block.settings.video__url.id }}?rel=0&showinfo=0&vq=720" title="YouTube iframe" width="350" height="480" frameborder="0" allowfullscreen></iframe>
+                    {% endif %}
+                    {% if block.settings.video__url.type == "vimeo" %}
+                      <iframe src="//player.vimeo.com/video/{{ block.settings.video__url.id }}?color={{ color_button | remove: "#" }}&byline=0&portrait=0&badge=0" title="Vimeo iframe" width="350" height="480" frameborder="0" allowfullscreen></iframe>
+                    {% endif %}
+                  {% endif %}
+                </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "custom-vedio-gallery",
+  "settings": [
+    {
+      "type": "text",
+      "id": "Heading",
+      "label": "Heading",
+      "default": "Enter your heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text_block",
+      "name": "vedio",
+      "settings": [
+        {
+          "type": "video_url",
+          "id": "video__url",
+          "label": "t:sections.featured-video.settings.video_url.label",
+          "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+          "accept": [
+            "youtube",
+            "vimeo"
+          ]
+        },
+        {
+          "type": "select",
+          "id": "align_text",
+          "label": "t:sections.text-columns.settings.align_text.label",
+          "default": "left",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:sections.text-columns.settings.align_text.options.left.label"
+            },
+            {
+              "value": "center",
+              "label": "t:sections.text-columns.settings.align_text.options.center.label"
+            },
+            {
+              "value": "right",
+              "label": "t:sections.text-columns.settings.align_text.options.right.label"
+            }
+          ]
+        }
+        
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "custom-vedio-gallery",
+      "blocks": [
+        {
+          "type": "text_block"
+        },
+        {
+          "type": "text_block"
+        },
+        {
+          "type": "text_block"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "custom.popups"
+    ]
+  }
+}
+{% endschema %}
