@@ -1,4 +1,49 @@
 <img src="{{ block.settings["icon-img"] | img_url: 'master' }}" style="width: {{ block.settings["icon_width"] }}px;" />
+
+========Vedio Settings=============
+-----------------------------------
+<div class="page-width">
+  <h1> Vedio Settting</h1>
+  {{ section.settings.custom-vd |  video_tag: autoplay: false, loop: true, muted: true, controls: true, style: "height: 400px; width: 600px", img_size:"500x"  }}
+
+  <!-- ================== -->
+  <h1> Vedio Url Setting</h1>
+     <iframe width="560" height="315" 
+       src="https://www.youtube.com/embed/{{ section.settings.cus_vdo_url.id }}"
+       title="YouTube video player" frameborder="0" 
+       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+  <!-- =================== -->
+  
+</div>
+
+{% schema %}
+  {
+    "name": "my_learning",
+    "settings": [
+      {
+        "type":"video",
+        "label":"vedio setting",
+        "id":"custom-vd"
+      },
+      {
+        "type":"video_url",
+        "label":"Vedio Url Setting",
+        "id":"cus_vdo_url",
+        "accept": ["youtube"],
+        "placeholder": "Youtube Url"
+      }
+      
+    ],
+    "blocks":[],
+    "presets":[
+      {
+        "name":"my_learning"
+      }
+    ]
+  }
+{% endschema %}
+
 ++++++++++++++++++
 Meta field
 ==================
