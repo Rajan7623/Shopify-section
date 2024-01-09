@@ -3,6 +3,22 @@
 ===========file url filter in ==============
 <a href="https:{{product.metafields.custom.product_description | file_url }}" target="_blank" rel="noopener noreferrer" >Click here to download file</a>
 
+====varinet Swatch=======
+  <!--  =============================================-->
+   {% if option.name == "Color" %}
+          <label style="background-image: url({{ value | handle | append: '.jpg' | file_url }})" for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
+             {{ value }} <img src="{{ value |  handle | append: '.jpg' | file_url }}" width="50px" hieght="50px" />
+          </label>
+    {% else %}
+            <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
+            {{ value -}}
+            <span class="visually-hidden">{{ 'products.product.variant_sold_out_or_unavailable' | t }}</span>
+          </label>
+    {% endif %}
+  
+
+   <!--  =============================================-->
+
 ========Vedio Settings=============
 -----------------------------------
 <div class="page-width">
